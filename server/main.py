@@ -34,16 +34,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API routes
-app.include_router(router, prefix="/api")
-
-# Include simple auth routes
+# Include simple auth routes first
 try:
     from api.simple_auth import router as auth_router
-    app.include_router(auth_router, prefix="/api")
+    app.include_router(auth_router, prefix="/api", tags=["auth"])
     logger.info("Simple auth routes registered")
+    logger.info(f"Auth routes: {[route.path for route in auth_router.routes]}")
 except Exception as e:
     logger.error(f"Failed to register auth routes: {e}")
+    import traceback
+    traceback.print_exc()
+
+# Include API routes
+app.include_router(router, prefix="/api", tags=["api"])
+logger.info(f"API routes: {[route.path for route in router.routes]}")
 
 # Check if client build exists
 client_dist = Path(__file__).parent.parent / "client" / "dist"

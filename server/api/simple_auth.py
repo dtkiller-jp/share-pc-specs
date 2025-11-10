@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from database import SessionLocal, User, ResourceLimit
 from api.auth import create_access_token
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: str
 
 class LoginResponse(BaseModel):
     user: dict
