@@ -103,4 +103,5 @@ echo "Press Ctrl+C to stop the server"
 echo "========================================"
 echo ""
 
+cd server
 python3 main.py

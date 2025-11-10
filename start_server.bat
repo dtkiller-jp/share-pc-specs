@@ -108,6 +108,7 @@ echo Press Ctrl+C to stop the server
 echo ========================================
 echo.
 
+cd server
 python main.py
 
 pause
