@@ -1,14 +1,14 @@
 # サーバー設定
 server:
-  host: "0.0.0.0"  # 外部アクセス許可（ローカルのみなら 127.0.0.1）
+  host: "0.0.0.0"
   port: 8000
-  secret_key: "yjsjIytf7zqOKqZDqWIKRDM_XbZXfDlnk3esBGrzKq4"  # 必ず変更！
+  secret_key: "yjsjIytf7zqOKqZDqWIKRDM_XbZXfDlnk3esBGrzKq4"
 
-# 管理者メールアドレス（複数設定可能）
+# 管理者メールアドレス
 admin_emails:
   - "ekusos22@gmail.com"
 
-# ホワイトリスト（アクセス許可するメールアドレス）
+# ホワイトリスト
 whitelist_emails:
   - "ekusos22@gmail.com"
 
@@ -23,7 +23,7 @@ storage:
 
 # デフォルトリソース制限
 default_limits:
-  cpu_percent: 50        # CPU使用率上限（%）
-  memory_mb: 2048        # メモリ上限（MB）
-  gpu_memory_mb: 4096    # GPUメモリ上限（MB）
-  storage_mb: 5120       # ストレージ上限（MB）
+  cpu_percent: 50
+  memory_mb: 2048
+  gpu_memory_mb: 4096
+  storage_mb: 5120
