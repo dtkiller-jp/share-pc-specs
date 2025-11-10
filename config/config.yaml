@@ -1,0 +1,29 @@
+server:
+  host: "0.0.0.0"  # 外部アクセスを許可（ローカルのみなら 127.0.0.1）
+  port: 8000
+  secret_key: "CHANGE_THIS_SECRET_KEY_IN_PRODUCTION"  # 必ず変更！python -c "import secrets; print(secrets.token_urlsafe(32))" で生成
+
+oauth:
+  google:
+    client_id: "1079012653757-8m18vvdv0qqve7i70s1vailssaq1qn16.apps.googleusercontent.com"  # https://console.cloud.google.com/ で取得
+    client_secret: "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"
+  github:
+    client_id: "Ov23liTq1B6zpZ8csnff"  # https://github.com/settings/developers で取得
+    client_secret: "588267ed5a2e2f1909cf76709ca961e66b2ed590"
+
+admin_emails:
+  - "ekusos22@gmail.com"  # 管理者のメールアドレス（複数設定可能）
+
+database:
+  url: "sqlite:///./app.db"  # SQLite（開発用）
+  # url: "postgresql://user:password@localhost/dbname"  # PostgreSQL（本番用）
+
+storage:
+  base_path: "./storage"
+  notebooks_path: "./notebooks"
+
+default_limits:
+  cpu_percent: 50        # デフォルトCPU使用率上限（%）
+  memory_mb: 2048        # デフォルトメモリ上限（MB）= 2GB
+  gpu_memory_mb: 4096    # デフォルトGPUメモリ上限（MB）= 4GB
+  storage_mb: 5120       # デフォルトストレージ上限（MB）= 5GB
