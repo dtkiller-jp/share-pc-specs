@@ -2,15 +2,17 @@
 server:
   host: "0.0.0.0"  # 外部アクセス許可（ローカルのみなら 127.0.0.1）
   port: 8000
-  secret_key: "yjsjIytf7zqOKqZDqWIKRDM_XbZXfDlnk3esBGrzKq4"  # 必ず変更！
+  secret_key: "CHANGE_THIS_SECRET_KEY_IN_PRODUCTION"  # 必ず変更！python -c "import secrets; print(secrets.token_urlsafe(32))" で生成
 
 # 管理者メールアドレス（複数設定可能）
 admin_emails:
-  - "ekusos22@gmail.com"
+  - "admin@example.com"
 
 # ホワイトリスト（アクセス許可するメールアドレス）
 whitelist_emails:
-  - "ekusos22@gmail.com"
+  - "admin@example.com"
+  - "user1@example.com"
+  - "user2@example.com"
 
 # データベース
 database:

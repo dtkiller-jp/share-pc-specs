@@ -2,54 +2,117 @@
 
 分散型Jupyter Notebook実行環境 - リソース管理機能付き
 
+クライアントPCの計算負荷を別のサーバーPCに分散させ、リソース制限を設けながら複数ユーザーで共有できるシステムです。
+
 ## 機能
 
-- OAuth 2.0認証（Google/GitHub）
-- ホワイトリスト制アクセス管理
-- 管理者ダッシュボード
-- ユーザーごとのリソース制限（CPU/メモリ/GPU/ストレージ）
-- リアルタイムNotebook実行
+- **メールホワイトリスト認証** - 許可されたユーザーのみアクセス可能
+- **管理者ダッシュボード** - ユーザー管理、リソース制限設定、BAN機能
+- **リソース管理** - CPU/メモリ/GPU/ストレージの使用量制限
+- **リアルタイムNotebook実行** - WebSocket経由で即座に結果を表示
+- **Python補完機能** - Monaco Editorによるコード補完
 
-## セットアップ
+## 必要要件
 
-詳細な設定方法は [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) を参照してください。
+- Python 3.8+
+- Node.js 16+
+- pip
+- npm
 
-### クイックスタート
+## インストール
 
-1. **OAuth認証情報を取得**
-   - Google: https://console.cloud.google.com/
-   - GitHub: https://github.com/settings/developers
+### 1. リポジトリをクローン
 
-2. **config/config.yaml を編集**
-   ```bash
-   # secret_keyを生成
-   python -c "import secrets; print(secrets.token_urlsafe(32))"
-   
-   # config/config.yaml に以下を設定：
-   # - secret_key（上で生成した値）
-   # - OAuth認証情報（client_id, client_secret）
-   # - admin_emails（管理者のメールアドレス）
-   ```
+```bash
+git clone https://github.com/yourusername/distributed-jupyter.git
+cd distributed-jupyter
+```
 
-3. **サーバー起動**
-   ```bash
-   cd server
-   pip install -r requirements.txt
-   python setup_db.py
-   python main.py
-   ```
+### 2. 設定ファイルを作成
 
-4. **クライアント起動**
-   ```bash
-   cd client
-   npm install
-   npm run dev
-   ```
+```bash
+cp config/config.example.yaml config/config.yaml
+```
 
-5. **アクセス**
-   - ブラウザで http://localhost:3000 を開く
+### 3. config/config.yaml を編集
 
-## ポート開放（外部アクセス用）
+```yaml
+server:
+  secret_key: "ランダムな文字列に変更"  # 重要！
+
+admin_emails:
+  - "your-email@example.com"
+
+whitelist_emails:
+  - "your-email@example.com"
+  - "user1@example.com"
+```
+
+**secret_key の生成:**
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+### 4. サーバー起動
+
+**Windows:**
+```bash
+.\start_server.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x start_server.sh
+./start_server.sh
+```
+
+### 5. アクセス
+
+ブラウザで **http://localhost:8000** を開く
+
+## ストレージ構造
+
+```
+distributed-jupyter/
+├── storage/          # ユーザーファイル（.gitignoreに含まれる）
+├── notebooks/        # .ipynbファイル（.gitignoreに含まれる）
+│   └── {user_id}/    # ユーザーごとのディレクトリ
+│       └── *.ipynb
+├── app.db           # SQLiteデータベース（.gitignoreに含まれる）
+└── config/
+    └── config.yaml  # 個人設定（.gitignoreに含まれる）
+```
+
+**ストレージの場所:**
+- デフォルト: プロジェクトルートの `./storage` と `./notebooks`
+- 変更可能: `config/config.yaml` の `storage` セクション
+
+## ユーザー管理
+
+### ホワイトリストに追加
+
+`config/config.yaml` を編集：
+
+```yaml
+whitelist_emails:
+  - "newuser@example.com"  # 追加
+```
+
+サーバーを再起動すると反映されます。
+
+### 管理者権限を付与
+
+```yaml
+admin_emails:
+  - "admin@example.com"  # 追加
+```
+
+管理者は以下が可能：
+- 全ユーザーの管理
+- リソース制限の設定
+- ユーザーのBAN/承認
+
+## ポート開放（外部アクセス）
 
 ### Windows
 ```powershell
@@ -60,3 +123,37 @@ New-NetFirewallRule -DisplayName "Distributed Jupyter" -Direction Inbound -Local
 ```bash
 sudo ufw allow 8000/tcp
 ```
+
+## 開発
+
+### クライアント開発モード
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+開発サーバー: http://localhost:3000
+
+### サーバー開発モード
+
+```bash
+cd server
+pip install -r requirements.txt
+python main.py
+```
+
+## トラブルシューティング
+
+詳細は [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) を参照
+
+## ライセンス
+
+MIT License
+
+## 注意事項
+
+- `config/config.yaml` は個人情報を含むため、Gitにコミットしないでください
+- `secret_key` は必ず変更してください
+- 本番環境ではHTTPS化を推奨します

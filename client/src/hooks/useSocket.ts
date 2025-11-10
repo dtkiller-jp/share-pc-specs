@@ -9,7 +9,8 @@ export function useSocket() {
   useEffect(() => {
     if (!token) return
 
-    const newSocket = io('http://localhost:8000', {
+    const serverUrl = window.location.origin
+    const newSocket = io(serverUrl, {
       auth: { token }
     })
 

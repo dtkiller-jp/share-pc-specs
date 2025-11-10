@@ -56,31 +56,26 @@
   background-color: #2980b9;
 }
 
-.oauth-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.login-note {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 0.85rem;
+  margin-top: 1.5rem;
+  line-height: 1.6;
 }
 
-.oauth-btn {
+.error-message {
   padding: 0.75rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: opacity 0.2s;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  color: #721c24;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
-.oauth-btn:hover {
-  opacity: 0.9;
-}
-
-.oauth-btn.google {
-  background-color: #db4437;
-  color: white;
-}
-
-.oauth-btn.github {
-  background-color: #333;
-  color: white;
+.login-button:disabled,
+.login-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

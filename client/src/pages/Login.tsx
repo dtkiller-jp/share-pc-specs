@@ -1,29 +1,39 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
+import axios from 'axios'
 import './Login.css'
 
 export default function Login() {
   const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
   const setAuth = useAuthStore((state) => state.setAuth)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // TODO: Implement OAuth login
-    // For now, mock login
-    const mockUser = {
-      id: 1,
-      email,
-      is_admin: email.includes('admin'),
-      is_banned: false,
-      is_whitelisted: true
+    if (!email) {
+      setError('メールアドレスを入力してください')
+      return
     }
-    const mockToken = 'mock-token-' + Date.now()
-    
-    setAuth(mockUser, mockToken)
-    navigate('/')
+
+    setLoading(true)
+    setError('')
+
+    try {
+      const response = await axios.post('/api/auth/login', { email })
+      const { user, token } = response.data
+      
+      setAuth(user, token)
+      navigate('/')
+    } catch (err: any) {
+      const message = err.response?.data?.detail || 'ログインに失敗しました'
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -35,25 +45,31 @@ export default function Login() {
         <form onSubmit={handleLogin} className="login-form">
           <input
             type="email"
-            placeholder="Email"
+            placeholder="メールアドレスを入力"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            onChange={(e) => {
+              setEmail(e.target.value)
+              setError('')
+            }}
             className="login-input"
+            disabled={loading}
           />
-          <button type="submit" className="login-button">
-            Login (Mock)
+          
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+          
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? 'ログイン中...' : 'ログイン'}
           </button>
         </form>
         
-        <div className="oauth-buttons">
-          <button className="oauth-btn google">
-            Login with Google
-          </button>
-          <button className="oauth-btn github">
-            Login with GitHub
-          </button>
-        </div>
+        <p className="login-note">
+          ホワイトリストに登録されたメールアドレスでログインできます<br/>
+          管理者に連絡してアクセス権限を取得してください
+        </p>
       </div>
     </div>
   )
